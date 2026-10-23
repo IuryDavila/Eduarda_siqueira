@@ -1,4 +1,4 @@
-import { PRODUCTS, BRANDS, WINKS } from "./catalog.js";
+import { PRODUCTS, BRANDS, WINKS, EGGS } from "./catalog.js";
 import { consult, CONCEALER_TIPS } from "./recommendations.js";
 import { makeLook } from "./looks.js";
 // Eduarda Beauty — storage, perfil, descoberta, recomendações e catálogo em um só módulo.
@@ -26,9 +26,15 @@ const QUESTIONS = [
 ];
 
 // ---- storage (local por padrão; nuvem se configurada e logada)
-const blank = () => ({ profile: {}, likes: {}, favs: [], skipped: [], notes: "", seen: 0, own: {}, mine: [], looks: [] });
+const blank = () => ({ profile: {}, likes: {}, favs: [], skipped: [], notes: "", seen: 0, own: {}, mine: [], looks: [], eggs: {} });
 let S = blank(), sb = null, user = null;
-const toast = (m) => { const t = $("#toast"); t.textContent = m; t.classList.add("on"); setTimeout(() => t.classList.remove("on"), 2200); };
+const toast = (m, ms = 2200) => { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), ms); };
+function egg(k) { if (!EGGS[k] || S.eggs?.[k]) return false; (S.eggs ||= {})[k] = 1; save(); toast(EGGS[k], 4200); return true; }
+function eggFor(k, v) {
+  if (k === "tier" && v && v !== "não sei") return v === "premium" ? egg("premiumTier") : egg("cheapTier");
+  if ((k === "acab" && v === "natural") || (k === "estilo" && v === "natural") || (k === "paleta" && (v === "neutros" || v === "terrosos"))) return egg("natural");
+  return false;
+}
 const local = () => { try { return { ...blank(), ...JSON.parse(localStorage.getItem(KEY)) }; } catch { return blank(); } };
 async function save() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { toast("Não foi possível salvar neste navegador."); return; }
@@ -64,13 +70,13 @@ const explain = () => { const f = S.profile, b = []; if (f.acab && f.acab !== "n
 // ---- perfil
 function renderProfile() {
   $("#profile").innerHTML = FIELDS.map(([k, l, o]) => `<label>${l}<select name="${k}"><option value="">—</option>${o.map((v) => `<option ${S.profile[k] === v ? "selected" : ""}>${v}</option>`).join("")}</select></label>`).join("") + `<label>Produtos que já uso<input name="usa" value="${esc(S.profile.usa)}"></label>`;
-  $("#profile").onchange = (e) => { S.profile[e.target.name] = e.target.value; save(); renderAll(); toast("Preferência atualizada."); };
+  $("#profile").onchange = (e) => { S.profile[e.target.name] = e.target.value; save(); renderAll(); eggFor(e.target.name, e.target.value) || toast("Preferência atualizada."); };
 }
 function renderDiscover() {
   const q = QUESTIONS.find((x) => !S.profile[x.k] && !S.skipped.includes(x.k)), d = $("#discover");
   if (!q) { d.innerHTML = `<h3>Separei algumas opções com a sua cara.</h3><p>Quer mudar algo? Ajuste acima ou <button class="btn ghost" id="redo">refazer as escolhas</button></p>`; $("#redo").onclick = () => { QUESTIONS.forEach((x) => delete S.profile[x.k]); S.skipped = []; save(); renderAll(); }; return; }
   d.innerHTML = `<h3>${q.q}</h3><div class="opts">${q.o.map(([v, c, t]) => `<button class="opt" style="--c:${c};${t ? "color:" + t : ""}" data-v="${v}">${v}</button>`).join("")}</div><p><button class="btn ghost" id="skip">Agora não</button></p>`;
-  d.querySelectorAll(".opt").forEach((b) => (b.onclick = () => { S.profile[q.k] = b.dataset.v; save(); renderAll(); toast("Anotado."); }));
+  d.querySelectorAll(".opt").forEach((b) => (b.onclick = () => { S.profile[q.k] = b.dataset.v; save(); renderAll(); eggFor(q.k, b.dataset.v) || toast("Anotado."); }));
   $("#skip").onclick = () => { S.skipped.push(q.k); save(); renderDiscover(); };
 }
 
@@ -89,6 +95,7 @@ function renderCatalog() {
   $("#reco-why").textContent = explain();
 }
 function renderBrands() {
+  if (document.querySelector("#brands")) egg("brands");
   const t = S.profile.tier, st = S.profile.estilo;
   $("#brands").innerHTML = BRANDS.map((b) => { const m = []; if (t && b.tier === t) m.push("combina com sua faixa de preço"); if (st && b.style === st) m.push("estilo " + st); return `<article class="card"><div class="b"><h3>${esc(b.name)}</h3><span class="tag">${esc(b.origin)}</span><span class="tag">${esc(b.tier)}</span><p>${esc(b.why)}</p><small>${m.length ? "Sugerida porque " + m.join(" e ") + "." : "Ainda sem dados suficientes para ligar esta marca às suas preferências."}</small></div></article>`; }).join("");
 }
@@ -96,6 +103,7 @@ function renderFavs() {
   const items = PRODUCTS.filter((p) => S.favs.includes(p.id) || S.likes[p.id] === "quero");
   $("#favs").innerHTML = items.length ? items.map((p) => card(p, [])).join("") : '<p class="empty">Nada por aqui ainda. Toque em ♥ ou "Quero experimentar" nos produtos.</p>';
   const tot = items.filter((p) => p.price != null).reduce((a, p) => a + p.price, 0);
+  if (items.length > 1 && document.querySelector("#compare")) egg("compare");
   $("#compare").innerHTML = items.length > 1 ? `<h3>Comparar</h3><div style="overflow-x:auto"><table><tr><th>Produto</th><th>Marca</th><th>Acabamento</th><th>Cobertura</th><th>Pele</th><th>Preço</th></tr>${items.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.brand)}</td><td>${p.acab}</td><td>${p.cob}</td><td>${p.pele}</td><td>${money(p.price)}</td></tr>`).join("")}</table></div><p>Total estimado (só itens com preço informado): ${money(tot)}</p>` : "";
 }
 function tools() {
@@ -130,8 +138,8 @@ function renderLooks() {
   $("#lk-saved").innerHTML = S.looks.length ? S.looks.map((k, i) => `<article class="card"><div class="b"><h3>${esc(k.name)}</h3><small>${esc(k.names.join(" + ") || "sem produtos")}</small><div class="row"><button data-del="${i}">Remover</button></div></div></article>`).join("") : '<p class="empty">Nenhum look salvo ainda.</p>';
 }
 const syncMine = () => S.mine.forEach((m) => { if (!PRODUCTS.some((p) => p.id === m.id)) PRODUCTS.push(m); });
-$("#lk-go").onclick = () => { LOOK = makeLook($("#lk-occ").value, $("#lk-style").value || S.profile.paleta, score, PRODUCTS); renderLooks(); };
-$("#lk-save").onclick = () => { if (!LOOK) return; S.looks.unshift({ name: LOOK.title + " · " + new Date().toLocaleDateString("pt-BR"), names: LOOK.items.filter((i) => i.name).map((i) => i.name) }); S.looks = S.looks.slice(0, 20); save(); renderLooks(); toast("Look salvo."); };
+$("#lk-go").onclick = () => { LOOK = makeLook($("#lk-occ").value, $("#lk-style").value || S.profile.paleta, score, PRODUCTS); renderLooks(); egg("look"); };
+$("#lk-save").onclick = () => { if (!LOOK) return; S.looks.unshift({ name: LOOK.title + " · " + new Date().toLocaleDateString("pt-BR"), names: LOOK.items.filter((i) => i.name).map((i) => i.name) }); S.looks = S.looks.slice(0, 20); save(); renderLooks(); egg("lookSave") || toast("Look salvo."); };
 document.addEventListener("click", (e) => { const d = e.target.dataset?.del; if (d === undefined) return; S.looks.splice(+d, 1); save(); renderLooks(); });
 document.addEventListener("change", (e) => {
   const k = e.target.dataset?.o; if (!k) return; const id = e.target.dataset.id, o = S.own[id]; if (!o) return;
@@ -144,7 +152,7 @@ $("#mine").addEventListener("submit", (e) => {
   if (Number.isNaN(price)) { err.textContent = "Preço inválido. Use números, como 49,90."; return; }
   err.textContent = ""; const id = "m" + Date.now();
   const p = { id, name, brand: String(f.get("brand")).trim() || "Sem marca", cat: f.get("cat"), origin: "minha", tier: "", acab: "natural", cob: "média", pele: "todas", tags: [], price, url: null, conf: "a confirmar", tons: String(f.get("tom")).trim() || "Informado por você.", pitch: "Cadastrado por você." };
-  S.mine.push(p); PRODUCTS.push(p); S.own[id] = { status: f.get("status"), price, tom: String(f.get("tom")).trim() }; save(); renderAll(); e.target.reset(); toast("Produto adicionado.");
+  S.mine.push(p); PRODUCTS.push(p); S.own[id] = { status: f.get("status"), price, tom: String(f.get("tom")).trim() }; save(); renderAll(); e.target.reset(); egg("mine") || toast("Produto adicionado.");
 });
 let DP; addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); DP = e; $("#install").hidden = false; });
 $("#install").onclick = async () => { if (DP) { DP.prompt(); await DP.userChoice; $("#install").hidden = true; } };
@@ -154,18 +162,23 @@ function renderAll() { syncMine(); renderNec(); renderLooks(); renderConsult(); 
 
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-a]"); if (!b) return;
-  const id = b.dataset.id, a = b.dataset.a;
-  if (a === "own") { if (S.own[id]) delete S.own[id]; else S.own[id] = { status: "quero" }; save(); renderAll(); return; }
-  if (a === "fav") S.favs = S.favs.includes(id) ? S.favs.filter((x) => x !== id) : [...S.favs, id]; else if (S.likes[id] === a) delete S.likes[id]; else S.likes[id] = a;
+  const id = b.dataset.id, a = b.dataset.a, p = PRODUCTS.find((x) => x.id === id);
+  if (a === "own") { if (S.own[id]) delete S.own[id]; else S.own[id] = { status: "quero" }; }
+  else if (a === "fav") S.favs = S.favs.includes(id) ? S.favs.filter((x) => x !== id) : [...S.favs, id];
+  else if (S.likes[id] === a) delete S.likes[id]; else S.likes[id] = a;
   save(); renderAll();
-  if (a === "fav" && S.favs.includes(id) && PRODUCTS.find((p) => p.id === id)?.iury) toast(WINKS[Math.floor(Math.random() * WINKS.length)]);
+  const picked = (a === "own" && S.own[id]) || (a === "fav" && S.favs.includes(id)) || ((a === "gostei" || a === "quero") && S.likes[id] === a);
+  if (!picked || !p) return;
+  const shown = (p.tier === "premium" ? egg("premiumProd") : p.tier ? egg("cheapProd") : false) || (p.acab === "natural" && egg("naturalProd"));
+  if (!shown && a === "fav" && p.iury) toast(WINKS[Math.floor(Math.random() * WINKS.length)]);
 });
 const fillCats = () => { const v = $("#cat").value; $("#cat").innerHTML = '<option value="">Todas</option>' + [...new Set(PRODUCTS.map((p) => p.cat))].map((c) => `<option>${esc(c)}</option>`).join(""); $("#cat").value = v; $("#mine-cat").innerHTML = [...new Set(PRODUCTS.map((p) => p.cat))].map((c) => `<option>${esc(c)}</option>`).join(""); };
 fillCats();
 ["#q", "#cat", "#sort"].forEach((s) => $(s).addEventListener("input", renderCatalog));
 $("#save").onclick = () => { S.notes = $("#notes").value; save(); toast("Salvo."); };
 $("#export").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: "application/json" })); a.download = "meus-dados-eduarda.json"; a.click(); };
-$("#reset").onclick = async () => { if (!confirm("Apagar todas as suas preferências, favoritos e notas?")) return; for (let i = PRODUCTS.length - 1; i >= 0; i--) if (PRODUCTS[i].origin === "minha") PRODUCTS.splice(i, 1); S = blank(); localStorage.removeItem(KEY); if (sb && user) await sb.from("beauty_profiles").delete().eq("user_id", user.id); $("#notes").value = ""; renderAll(); toast("Dados apagados."); };
+$("#reset").onclick = zeroAll;
+$("#zero").onclick = zeroAll;
 
 S = local(); $("#notes").value = S.notes; renderAll();
 initCloud().then(() => { fillCats(); $("#notes").value = S.notes; renderAll(); });
@@ -175,3 +188,12 @@ try {
   const w = $("#welcome");
   if (w && w.showModal && !localStorage.getItem("eduarda:welcome")) { w.showModal(); $("#enter").onclick = () => { localStorage.setItem("eduarda:welcome", "1"); w.close(); }; }
 } catch { /* sem localStorage: segue sem a tela de boas-vindas */ }
+
+async function zeroAll() {
+  if (!confirm("Zerar tudo? Isso apaga suas escolhas, favoritos, notas, looks e também os easter eggs escondidos.")) return;
+  for (let i = PRODUCTS.length - 1; i >= 0; i--) if (PRODUCTS[i].origin === "minha") PRODUCTS.splice(i, 1);
+  try { if (sb && user) await sb.from("beauty_profiles").delete().eq("user_id", user.id); } catch { /* segue limpando o aparelho */ }
+  S = blank();
+  try { localStorage.removeItem(KEY); localStorage.removeItem("eduarda:welcome"); } catch { /* sem localStorage */ }
+  location.href = "index.html";
+}

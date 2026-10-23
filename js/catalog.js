@@ -58,3 +58,17 @@ export const BRANDS = [
 ];
 // Recados sutis, mostrados só ocasionalmente. Mantenha leves e sem pressão.
 export const WINKS = ["Dizem que o Iury vai gostar de te ver usando esse.", "Uma fonte confiável (o Iury) apoia esta escolha.", "O Iury ia aprovar. Mas a decisão é sua.", "Se o Iury perguntar de onde veio esse brilho, a culpa é do produto."];
+// Easter eggs: cada um aparece uma única vez (o botão "Zerar tudo" libera todos de novo).
+export const EGGS = {
+  cheapTier: "Pega o premium, Iury vai te dar de presente, moça.",
+  premiumTier: "Gosto refinado. O Iury já está juntando as moedinhas.",
+  natural: "Sua pele natural já é linda.",
+  cheapProd: "Bom, mas o premium está logo ali. O Iury finge que não viu o preço.",
+  premiumProd: "Escolha de quem entende. O Iury ia aprovar e pagar.",
+  naturalProd: "Natural é elegância: sua pele já faz metade do trabalho.",
+  look: "Esse look merece plateia. O Iury vai gostar de te ver assim.",
+  lookSave: "Look guardado. O Iury vai querer saber qual foi o escolhido.",
+  mine: "Cadastrou até produto próprio. Autonomia total, moça.",
+  compare: "Comparando como quem entende. Iury aprova.",
+  brands: "Marca nova pede teste. O Iury se oferece como juiz.",
+};
