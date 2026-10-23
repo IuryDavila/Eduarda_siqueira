@@ -2,6 +2,9 @@
 
 Site estático (HTML/CSS/JS) para GitHub Pages. Feito para Eduarda.
 
+## Páginas
+`index.html` (início), `pele.html`, `base.html` (consultoria), `looks.html`, `produtos.html`, `marcas.html`, `favoritos.html`, `espaco.html` (nécessaire, notas, dados) e `admin.html` (administração). Menu inferior no celular.
+
 ## Já funciona (sem configurar nada)
 Consultoria de base e corretivo com nível de confiança, guia de subtom e comparador lado a lado.
 Perfil de beleza, perguntas visuais ("Descubra seu estilo"), recomendações com motivo, catálogo com busca/filtro/ordenação, marcas com explicação, favoritos, comparador, notas, exportar e apagar dados, guia "Encontrar meu tom", teclado/leitor de tela, rodapé com dedicatória.

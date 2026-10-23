@@ -1,122 +1,13 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Eduarda Beauty</title>
-<meta name="description" content="Consultoria de beleza personalizada para Eduarda.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Início · Eduarda Beauty</title><meta name="theme-color" content="#FAF5F0"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#783F50">
-<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<a class="skip" href="#main">Ir para o conteúdo</a>
-<header class="top">
-  <a class="logo" href="#inicio">Eduarda <small>beauty</small></a>
-  <nav aria-label="Principal" id="nav">
-    <a href="#inicio">Início</a><a href="#pele">Minha Pele</a><a href="#base">Consultoria</a><a href="#looks">Looks</a><a href="#produtos">Produtos</a>
-    <a href="#marcas">Marcas</a><a href="#favoritos">Favoritos</a><a href="#espaco">Meu Espaço</a>
-  </nav>
-</header>
-<div id="mode" class="mode" role="status"></div>
-<dialog id="welcome" aria-labelledby="wt">
-  <h2 id="wt">Olá, Eduarda.</h2>
-  <p>Este espaço foi criado só para você: uma consultoria de beleza que vai conhecendo seus gostos aos poucos, sem pressa e sem obrigação de responder nada.</p>
-  <p>Explore do seu jeito. Tudo aqui é seu e pode ser mudado ou apagado quando quiser.</p>
-  <p class="muted">Um presente de Iury D'avila.</p>
-  <button class="btn" id="enter">Entrar no meu espaço</button>
-</dialog>
+<link rel="stylesheet" href="css/style.css"></head>
+<body><a class="skip" href="#main">Ir para o conteúdo</a>
 <main id="main">
-<section id="inicio" class="hero">
-  <div class="hero-text">
-    <p class="for">Para Eduarda</p>
-    <h1>Sua beleza, do seu jeito.</h1>
-    <p class="lead">Descubra os tons, produtos e combinações que valorizam sua beleza e combinam com você.</p>
-    <p><a class="btn" href="#pele">Descobrir minha beleza</a> <a class="btn ghost" href="#produtos">Explorar maquiagens</a></p>
-    <p class="quote">Cada detalhe importa. Principalmente aqueles que fazem você se sentir ainda mais você.</p>
-  </div>
-  <div class="hero-art" aria-hidden="true">
-    <span style="--c:#C98291"></span><span style="--c:#783F50"></span><span style="--c:#EAD5D0"></span><span style="--c:#65483F"></span><span style="--c:#B86B78"></span>
-  </div>
-</section>
-
-<section id="pele">
-  <h2>Minha Pele</h2>
-  <p>Eduarda, vamos encontrar mais opções com a sua cara?</p>
-  <p class="muted">Tudo aqui é opcional e pode mudar quando você quiser. Usamos suas respostas só para personalizar as recomendações.</p>
-  <form id="profile" class="grid form" novalidate></form>
-  <div id="discover" class="discover" aria-live="polite"></div>
-  <details class="tone"><summary>Encontrar meu tom</summary>
-    <ol><li>Teste a base na linha da mandíbula, não no pulso.</li><li>Espere alguns minutos: a cor oxida.</li><li>Observe à luz natural, perto de uma janela.</li><li>O tom certo some entre rosto e pescoço.</li><li>Escolha 2 ou 3 tons vizinhos e passe uma faixa de cada um do maxilar até o pescoço.</li><li>Olhe de novo após 10 a 15 minutos e em dia de sol e de nuvem.</li><li>Seu tom pode mudar com a estação: é normal ter uma base para o verão e outra para o inverno.</li><li>Sem dados confiáveis, trate toda sugestão como uma possibilidade a testar.</li></ol>
-  </details>
-</section>
-
-<section id="base">
-  <h2>Consultoria de base e corretivo</h2>
-  <p class="muted">Sugestões a partir do seu perfil. A cor exata só se confirma testando na pele.</p>
-  <label>Para qual ocasião? <select id="occ"><option value="">Qualquer</option><option value="dia">Dia a dia</option><option value="festa">Festa</option><option value="evento">Evento especial</option></select></label>
-  <div id="consult" aria-live="polite"></div>
-  <div id="cmpbase"></div>
-</section>
-
-<section id="looks">
-  <h2>Looks</h2>
-  <p class="muted">Escolha a ocasião e deixe a ideia surgir. São sugestões, não regras: quem decide é você.</p>
-  <div class="bar"><label>Ocasião <select id="lk-occ"><option value="dia">Dia a dia</option><option value="trabalho">Trabalho ou faculdade</option><option value="encontro">Encontro</option><option value="festa">Festa</option><option value="evento">Evento especial</option></select></label>
-  <label>Estilo <select id="lk-style"><option value="">Usar meu perfil</option><option value="rosados">Rosados</option><option value="terrosos">Terrosos</option><option value="neutros">Neutros</option><option value="vibrantes">Vibrantes</option></select></label></div>
-  <p><button class="btn" id="lk-go">Surpreenda-me</button> <button class="btn ghost" id="lk-save" hidden>Salvar este look</button></p>
-  <div id="lk-out" aria-live="polite"></div>
-  <h3>Meus looks</h3><div id="lk-saved"></div>
-</section>
-
-<section id="produtos">
-  <h2>Produtos</h2>
-  <p class="muted" id="reco-why"></p>
-  <div id="tools" class="discover"></div>
-  <div class="bar">
-    <label>Buscar <input id="q" type="search" placeholder="nome ou marca"></label>
-    <label>Categoria <select id="cat"></select></label>
-    <label>Ordenar <select id="sort"><option value="rec">Para você</option><option value="name">Nome</option><option value="price">Preço</option></select></label>
-  </div>
-  <div id="cards" class="grid cards"></div>
-</section>
-
-<section id="marcas">
-  <h2>Marcas</h2>
-  <p class="muted">Sugestões com motivo explicado, nunca só pela aparência.</p>
-  <div id="brands" class="grid cards"></div>
-</section>
-
-<section id="favoritos">
-  <h2>Favoritos</h2>
-  <div id="favs" class="grid cards"></div>
-  <div id="compare"></div>
-</section>
-
-<section id="espaco">
-  <h2>Meu Espaço</h2>
-  <h3>Minha nécessaire</h3>
-  <p class="muted">Toque em "Minha nécessaire" em qualquer produto. Aqui você marca o que tem, o que quer e o preço que encontrou.</p>
-  <div id="nec"></div>
-  <details class="tone"><summary>Cadastrar um produto meu</summary>
-  <form id="mine" class="grid form" novalidate><label>Nome<input name="name" required></label><label>Marca<input name="brand"></label><label>Categoria<select name="cat" id="mine-cat"></select></label><label>Tom que uso<input name="tom"></label><label>Preço (R$)<input name="price" inputmode="decimal"></label><label>Status<select name="status"><option>tenho</option><option>quero</option><option>acabando</option></select></label><p class="err" id="mine-err" role="alert"></p><button class="btn" type="submit">Adicionar</button></form></details>
-  <label>Notas pessoais <textarea id="notes" rows="4"></textarea></label>
-  <p><button class="btn" id="save">Salvar</button> <button class="btn ghost" id="export">Exportar meus dados</button> <button class="btn ghost" id="reset">Apagar meus dados</button></p>
-  <div id="cloud" class="cloud"></div>
-  <p><button class="btn ghost" id="install" hidden>Instalar no celular</button></p>
-  <p class="muted">No iPhone: toque em Compartilhar e depois em "Adicionar à Tela de Início". Depois de instalado, o site abre mesmo sem internet e mantém suas escolhas salvas neste aparelho.</p>
-  <p class="muted">Privacidade: suas respostas servem apenas para personalizar a beleza aqui. Sem anúncios, sem venda de dados. Você pode ver, editar e apagar tudo.</p>
-</section>
-</main>
-<footer>
-  <p>Feito especialmente para Eduarda, com carinho.</p>
-  <small>Um presente de Iury D'avila.</small>
-</footer>
+<dialog id="welcome" aria-labelledby="wt"><h2 id="wt">Olá, Eduarda.</h2><p>Este espaço foi criado só para você: uma consultoria de beleza que vai conhecendo seus gostos aos poucos, sem pressa.</p><p class="muted">Um presente de Iury D'avila.</p><button class="btn" id="enter">Entrar</button></dialog><p class="for">Para Eduarda</p><h1 class="big">Sua beleza, do seu jeito.</h1><p class="lead">Descubra os tons, produtos e combinações que valorizam sua beleza e combinam com você.</p><div id="mode" class="mode" role="status"></div><nav class="hubs" aria-label="Seções"><a class="hub" href="pele.html"><span><b>Minha pele</b><small>Seu perfil e suas escolhas</small></span><i aria-hidden="true">›</i></a><a class="hub" href="base.html"><span><b>Consultoria de base</b><small>Bases e corretivos para você</small></span><i aria-hidden="true">›</i></a><a class="hub" href="looks.html"><span><b>Looks</b><small>Ideias por ocasião</small></span><i aria-hidden="true">›</i></a><a class="hub" href="produtos.html"><span><b>Produtos</b><small>Catálogo, busca e sugestão do dia</small></span><i aria-hidden="true">›</i></a><a class="hub" href="marcas.html"><span><b>Marcas</b><small>Marcas que combinam com você</small></span><i aria-hidden="true">›</i></a><a class="hub" href="favoritos.html"><span><b>Favoritos</b><small>Seus escolhidos e a comparação</small></span><i aria-hidden="true">›</i></a><a class="hub" href="espaco.html"><span><b>Meu espaço</b><small>Nécessaire, notas e seus dados</small></span><i aria-hidden="true">›</i></a></nav><p class="quote">Cada detalhe importa. Principalmente aqueles que fazem você se sentir ainda mais você.</p>
+<footer><p>Feito especialmente para Eduarda, com carinho.</p><small>Um presente de Iury D'avila.</small></footer></main>
+<nav class="tabs" aria-label="Principal"><a href="index.html" aria-current="page">Início</a><a href="produtos.html">Produtos</a><a href="looks.html">Looks</a><a href="favoritos.html">Favoritos</a><a href="espaco.html">Meu espaço</a></nav>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="js/app.js" type="module"></script>
-</body>
-</html>
+<script src="js/app.js" type="module"></script></body></html>
